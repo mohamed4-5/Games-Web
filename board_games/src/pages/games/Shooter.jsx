@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import PageWrapper from "../../../PageWrapper";
+import PageWrapper from "../../PageWrapper";
 
 export default function Shooter() {
   // ⚙ الثابت الجديد لعرض اللعبة (520px / 2 = 260)
@@ -256,22 +256,20 @@ export default function Shooter() {
           ))}
 
           {isGameOver && (
-            <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-4 z-20">
-              <div className="text-3xl text-red-500 font-bold">
-                GAME OVER
-              </div>
+            <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center gap-6 z-50 backdrop-blur-sm">
+              <h1 className="text-4xl font-bold text-red-500 tracking-wider">GAME OVER</h1>
+              <p className="text-2xl text-white font-mono">Score: {score}</p>
+              
+              <button
+                onClick={resetGame}
+                className="px-8 py-3 rounded-full border-2 border-cyan-400 text-cyan-400 font-bold text-lg hover:bg-cyan-400 hover:text-black transition-all shadow-[0_0_15px_rgba(34,211,238,0.5)] active:scale-95 cursor-pointer z-50"
+              >
+                Try Again
+              </button>
             </div>
           )}
         </div>
         
-        {isGameOver && (
-        <button
-            onClick={resetGame}
-            className="px-6 py-2 mt-10 rounded-xl border border-cyan-400 cursor-pointer text-cyan-400 hover:bg-cyan-400 hover:text-black transition z-10"
-            >
-            Try Again
-        </button>
-        )}
         
         {/* ================= 🎮 MOBILE TOUCH CONTROLS ================= */}
         {/* ⚙ تظهر فقط على الشاشات الأصغر من SM */}

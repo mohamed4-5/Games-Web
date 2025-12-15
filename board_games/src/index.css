@@ -133,3 +133,41 @@ body{
     0 0 15px rgba(34, 211, 238, 0.2),
     inset 0 0 10px rgba(34, 211, 238, 0.15);
 }
+
+@keyframes boardGlow {
+  0% {
+    box-shadow:
+      0 0 15px #22d3ee,
+      0 0 30px #22d3ee;
+  }
+  50% {
+    box-shadow:
+      0 0 20px #f472b6,
+      0 0 40px #f472b6;
+  }
+  100% {
+    box-shadow:
+      0 0 15px #22d3ee,
+      0 0 30px #22d3ee;
+  }
+}
+
+.piano-board-glow {
+  animation: boardGlow 3s ease-in-out infinite;
+}
+
+@keyframes tileGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(244, 114, 182, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
+  }
+}
+
+.tile-glow {
+  animation: tileGlow 1.5s ease-in-out infinite;
+}

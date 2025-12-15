@@ -16,5 +16,11 @@
     "name": "Shooter",
     "image": "../games/shooter.jpg",
     "description": "2D Shooter game, shoot enemeis coming from left and right"
+  },
+  {
+    "id": 4,
+    "name": "Piano",
+    "image": "../games/piano.jpg",
+    "description": "A classic game based on speed, hit the sqaures falling down on time "
   }
 ]
