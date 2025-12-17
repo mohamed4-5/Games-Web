@@ -16,7 +16,7 @@ export default function Games() {
   return (
     <PageWrapper>
         <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] p-6">
-        <h1 className="text-3xl font-bold text-white text-center mb-10">
+        <h1 className="text-5xl font-black tracking-tighter bg-gradient-to-r from-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg text-center mb-10">
             Available Games
         </h1>
 

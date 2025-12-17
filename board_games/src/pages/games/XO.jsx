@@ -145,7 +145,7 @@ export default function XO() {
       <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white p-6 flex flex-col items-center">
 
         {/* Title */}
-        <h1 className="text-5xl font-extrabold mb-8 tracking-widest bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+        <h1 className="text-5xl font-black mb-4 tracking-tighter bg-gradient-to-r from-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
           XO
         </h1>
 

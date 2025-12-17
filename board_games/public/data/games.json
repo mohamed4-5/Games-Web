@@ -22,5 +22,11 @@
     "name": "Piano",
     "image": "../games/piano.jpg",
     "description": "A classic game based on speed, hit the sqaures falling down on time "
+  },
+  {
+    "id": 5,
+    "name": "Whack Monster",
+    "image": "../games/whackmonster.jpg",
+    "description": "A fast-paced, neon-style reaction game! Test your reflexes"
   }
 ]

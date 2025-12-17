@@ -6,6 +6,7 @@ import XO from "./pages/games/XO";
 import SUS from "./pages/games/SUS";
 import Shooter from "./pages/games/Shooter";
 import Piano from "./pages/games/Piano";
+import WhackMonster from "./pages/games/WhackMonster";
 
 export default function App() {
   const location = useLocation();
@@ -18,6 +19,7 @@ export default function App() {
       <Route path="sus" element={<SUS/>}/>
       <Route path="shooter" element={<Shooter/>}/>
       <Route path="piano" element={<Piano/>}/>
+      <Route path="whack monster" element={<WhackMonster/>}/>
     </Routes>
   </AnimatePresence>
 

@@ -125,9 +125,13 @@ export default function PianoTiles() {
     <PageWrapper>
       <div className="min-h-screen w-full bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex flex-col items-center justify-center relative touch-none select-none">
 
-        {/* Score */}
-        <div className="absolute top-6 text-3xl font-bold text-cyan-400 z-10 drop-shadow-lg pointer-events-none">
-          {score}
+        {/* Title */}
+        <h1 className="text-5xl font-black mb-4 tracking-tighter bg-gradient-to-r from-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
+          Piano
+        </h1>
+        
+        <div className=" text-cyan-400 text-xl font-bold z-10 mb-4">
+          SCORE: {score}
         </div>
 
         {/* Board Container */}

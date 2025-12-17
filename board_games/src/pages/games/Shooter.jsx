@@ -208,16 +208,21 @@ export default function Shooter() {
     <PageWrapper>
       {/* ⚙ Padding سفلي للشاشات الصغيرة لتجنب إخفاء الأزرار */}
       <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex flex-col items-center justify-center relative overflow-hidden pb-40 sm:pb-0"> 
+        
+        {/* Title */}
+        <h1 className="text-5xl font-black mb-4 tracking-tighter bg-gradient-to-r from-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
+          Shooter
+        </h1>
+        <div className="flex flex-col gap-0">
+          {/* HUD */}
+          <div className=" text-cyan-400 text-xl font-bold z-10">
+            SCORE: {score}
+          </div>
 
-        {/* HUD */}
-        <div className="absolute top-6 text-cyan-400 text-xl font-bold z-10">
-          SCORE: {score}
+          <div className=" text-red-400 text-xl z-10">
+            {"❤".repeat(lives)}
+          </div>
         </div>
-
-        <div className="absolute top-14 text-red-400 text-xl z-10">
-          {"❤".repeat(lives)}
-        </div>
-
         {/* GAME CARD */}
         {/* ⚙ العرض 520px وتم تطبيق responsive scale-90 */}
         <div className="relative w-[520px] h-[520px] mt-10 bg-[#0d1323] rounded-3xl border border-cyan-500/30 neon overflow-hidden transform scale-70 sm:scale-100 origin-center transition-transform">
