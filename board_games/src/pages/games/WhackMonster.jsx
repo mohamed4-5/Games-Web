@@ -67,14 +67,12 @@ export default function WhackMonster() {
 
         {/* Title */}
         <h1 className="text-4xl font-black mb-4 tracking-tighter bg-gradient-to-r from-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
-          Whack Monster
+          Whack
         </h1>
 
         {/* HUD */}
         <div className="flex gap-20 mb-6 pointer-events-none">
-          <div className="text-xl">
-            Score: <span className="text-cyan-400 font-bold">{score}</span>
-          </div>
+          <p className="mb-4 text-xl font-bold text-pink-400">Score: {score}</p>
 
           <div className={`${gameOver ? "hidden" : "flex"} gap-1 text-red-500 text-xl`}>
             {[0, 1, 2].map((i) => (

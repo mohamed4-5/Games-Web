@@ -28,5 +28,17 @@
     "name": "Whack Monster",
     "image": "../games/whackmonster.jpg",
     "description": "A fast-paced, neon-style reaction game! Test your reflexes"
+  },
+  {
+    "id": 6,
+    "name": "Dodge Monster",
+    "image": "../games/dodge.jpg",
+    "description": "Experience an adrenaline-pumping survival challenge! Navigate your ship"
+  },
+  {
+    "id": 7,
+    "name": "Shoot Blocks",
+    "image": "../games/shoot.jpg",
+    "description": "Launch through endless waves of terrifying red, fiery monsters"
   }
 ]
