@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-
 import PageWrapper from "../../PageWrapper";
 
 export default function Shooter() {
-  // ⚙ الثابت الجديد لعرض اللعبة (520px / 2 = 260)
-  const PLAYER_X = 260; 
+  const PLAYER_X = 260;
 
   const [direction, setDirection] = useState("right");
   const [shots, setShots] = useState([]);
@@ -12,10 +10,10 @@ export default function Shooter() {
   const [lives, setLives] = useState(3);
 
   const [score, setScore] = useState(0);
-  // 🔥 الصعوبة: السرعة الابتدائية 4
   const [enemySpeed, setEnemySpeed] = useState(4);
-  // 🔥 الصعوبة: معدل الظهور 1500ms
   const [spawnRate, setSpawnRate] = useState(1500);
+
+  const [level, setLevel] = useState(0); // ✅ مستوى الصعوبة
 
   const [canShoot, setCanShoot] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -29,7 +27,7 @@ export default function Shooter() {
       ...prev,
       {
         id: Date.now(),
-        x: PLAYER_X, // يستخدم PLAYER_X الجديد (260)
+        x: PLAYER_X,
         dir: direction,
       },
     ]);
@@ -59,28 +57,24 @@ export default function Shooter() {
       const side = Math.random() > 0.5 ? "left" : "right";
       const rand = Math.random();
 
-      // Tank enemy
       if (rand < 0.35) {
         setEnemies((prev) => [
           ...prev,
           {
             id: Date.now(),
             side,
-            // ⚙ مكان ظهور الأعداء: 0 لليسار و 480 لليمين (520 - 40 عرض العدو)
-            x: side === "left" ? 0 : 480, 
+            x: side === "left" ? 0 : 480,
             hp: 2,
           },
         ]);
         return;
       }
 
-      // Normal enemy
       setEnemies((prev) => [
         ...prev,
         {
           id: Date.now(),
           side,
-          // ⚙ مكان ظهور الأعداء: 0 لليسار و 480 لليمين
           x: side === "left" ? 0 : 480,
           hp: 1,
         },
@@ -117,8 +111,7 @@ export default function Shooter() {
             ...s,
             x: s.dir === "right" ? s.x + 12 : s.x - 12,
           }))
-          // ⚙ مدى اختفاء الطلقات: 520 (الحد الأقصى للعرض)
-          .filter((s) => s.x > 0 && s.x < 520) 
+          .filter((s) => s.x > 0 && s.x < 520)
       );
     }, 40);
 
@@ -129,11 +122,9 @@ export default function Shooter() {
   useEffect(() => {
     if (isGameOver) return;
 
-    // 1. تحديد التصادمات
     const hits = [];
     shots.forEach((shot) => {
-      // يستخدم PLAYER_X الجديد (260)
-      const enemy = enemies.find((e) => Math.abs(shot.x - e.x) < 15); 
+      const enemy = enemies.find((e) => Math.abs(shot.x - e.x) < 15);
       if (enemy) {
         hits.push({ shotId: shot.id, enemyId: enemy.id });
       }
@@ -141,16 +132,13 @@ export default function Shooter() {
 
     if (hits.length === 0) return;
 
-    // 2. تحديث الأعداء
     setEnemies((prev) =>
       prev
         .map((enemy) => {
           const isHit = hits.find((h) => h.enemyId === enemy.id);
           if (isHit) {
             const newHp = enemy.hp - 1;
-            if (newHp <= 0) {
-                setScore(s => s + 10);
-            }
+            if (newHp <= 0) setScore((s) => s + 10);
             return { ...enemy, hp: newHp };
           }
           return enemy;
@@ -158,11 +146,9 @@ export default function Shooter() {
         .filter((e) => e.hp > 0)
     );
 
-    // 3. إزالة الطلقات
     setShots((prev) =>
       prev.filter((shot) => !hits.find((h) => h.shotId === shot.id))
     );
-
   }, [shots, enemies, isGameOver]);
 
   /* ================= ❤ PLAYER HIT ================= */
@@ -170,8 +156,7 @@ export default function Shooter() {
     if (isGameOver) return;
 
     enemies.forEach((enemy) => {
-      // يستخدم PLAYER_X الجديد (260)
-      if (Math.abs(enemy.x - PLAYER_X) < 20) { 
+      if (Math.abs(enemy.x - PLAYER_X) < 15) {
         setEnemies((prev) => prev.filter((e) => e.id !== enemy.id));
         setLives((l) => {
           if (l - 1 <= 0) {
@@ -184,11 +169,14 @@ export default function Shooter() {
     });
   }, [enemies]);
 
-  /* ================= 🔥 DIFFICULTY ================= */
+  /* ================= 🔥 DIFFICULTY (FIXED) ================= */
   useEffect(() => {
-    if (score > 0 && score % 25 === 0) {
-      setEnemySpeed((s) => Math.min(s + 1, 10));
-      setSpawnRate((r) => Math.max(r - 200, 500));
+    const newLevel = Math.floor(score / 25);
+
+    if (newLevel > level) {
+      setLevel(newLevel);
+      setEnemySpeed((s) => Math.min(s + 1, 8));   // 🔒 أقصى سرعة
+      setSpawnRate((r) => Math.max(r - 200, 600)); // 🔒 أقل Spawn
     }
   }, [score]);
 
@@ -201,11 +189,12 @@ export default function Shooter() {
     setScore(0);
     setEnemySpeed(4);
     setSpawnRate(1500);
+    setLevel(0);
     setIsGameOver(false);
   };
 
   return (
-    <PageWrapper>
+        <PageWrapper>
       {/* ⚙ Padding سفلي للشاشات الصغيرة لتجنب إخفاء الأزرار */}
       <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex flex-col items-center justify-center relative overflow-hidden pb-40 sm:pb-0"> 
         
@@ -213,13 +202,13 @@ export default function Shooter() {
         <h1 className="text-5xl font-black mb-4 tracking-tighter bg-gradient-to-r from-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
           Shooter
         </h1>
-        <div className="flex flex-col gap-0">
+        <div className="flex gap-20 mb-2 pointer-events-none">
           {/* HUD */}
           <div className=" text-cyan-400 text-xl font-bold z-10">
             SCORE: {score}
           </div>
 
-          <div className=" text-red-400 text-xl z-10">
+          <div className=" text-red-400 text-xl z-10 bg-transparent">
             {"❤".repeat(lives)}
           </div>
         </div>
@@ -230,7 +219,7 @@ export default function Shooter() {
           {/* Player (استخدام clip-path) */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div
-              className={`w-14 h-14 bg-cyan-400 glow-player transition-transform duration-100`}
+              className={"w-14 h-14 bg-cyan-400 glow-player transition-transform duration-100"}
               style={{
                 clipPath: 'polygon(0 50%, 100% 0, 100% 100%)',
                 transform: `rotate(${direction === "left" ? "0deg" : "180deg"})`
@@ -262,7 +251,7 @@ export default function Shooter() {
 
           {isGameOver && (
             <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center gap-6 z-50 backdrop-blur-sm">
-              <h1 className="text-4xl font-bold text-red-500 tracking-wider">GAME OVER</h1>
+              <h1 className="text-4xl font-bold text-red-500 tracking-wider animate-bounce">GAME OVER!</h1>
               <p className="text-2xl text-white font-mono">Score: {score}</p>
               
               <button

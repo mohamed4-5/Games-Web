@@ -3,62 +3,115 @@ import PageWrapper from "../../PageWrapper";
 
 export default function WhackMonster() {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [isBad, setIsBad] = useState(false); // دي عشان لون الوحش في الشاشة
   const [score, setScore] = useState(0);
-  const [misses, setMisses] = useState(0);
+  const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
+  const [level, setLevel] = useState(0);
 
-  const hideTimer = useRef(null);
+  // بنستخدم Refs عشان نضمن ان التايمر واللعبة يقروا القيم الصح دايماً
+  const timerRef = useRef(null);
+  const gameIntervalRef = useRef(null);
 
-  // السرعة بتزيد مع السكور
-  const spawnSpeed = Math.max(500, 1200 - score * 60);
-  const hideSpeed = Math.max(350, 900 - score * 40);
+  const MAX_LEVEL = 10;
 
-  // 👾 Spawn monster
+  // معادلات السرعة
+  const spawnSpeed = Math.max(500, 1200 - Math.min(level, MAX_LEVEL) * 60);
+  const hideSpeed = Math.max(350, 900 - Math.min(level, MAX_LEVEL) * 40);
+
+  /* ================= 🔥 DIFFICULTY ================= */
   useEffect(() => {
-    if (gameOver) return;
+    const newLevel = Math.floor(score / 3);
+    if (newLevel > level) setLevel(newLevel);
+  }, [score]);
 
-    const interval = setInterval(() => {
-      const index = Math.floor(Math.random() * 9);
-      setActiveIndex(index);
+  /* ================= 👾 GAME LOOP ================= */
+  useEffect(() => {
+    if (gameOver) {
+      if (gameIntervalRef.current) clearInterval(gameIntervalRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      return;
+    }
 
-      if (hideTimer.current) clearTimeout(hideTimer.current);
+    const startGameLoop = () => {
+      gameIntervalRef.current = setInterval(() => {
+        // 1. اختيار مكان عشوائي
+        const index = Math.floor(Math.random() * 9);
+        setActiveIndex(index);
 
-      hideTimer.current = setTimeout(() => {
-        setActiveIndex(null);
-        setMisses((m) => {
-          if (m + 1 >= 3) {
-            setGameOver(true);
-            return m;
+        // 2. تحديد نوع الوحش (شرير ولا طيب) وتخزينه في متغير محلي
+        // المتغير المحلي ده هو اللي الـ Timeout هيشوفه صح
+        const isThisRoundBad = Math.random() < 0.25;
+        setIsBad(isThisRoundBad);
+
+        // 3. تنظيف أي تايمر قديم
+        if (timerRef.current) clearTimeout(timerRef.current);
+
+        // 4. ضبط تايمر اختفاء الوحش
+        timerRef.current = setTimeout(() => {
+          setActiveIndex(null); // اخفاء الوحش
+
+          // اللحظة الحاسمة: الوحش هرب
+          // لو الوحش كان "طيب" (مش شرير) -> نقص حياة
+          if (!isThisRoundBad) {
+            setLives((prevLives) => {
+              const newLives = prevLives - 1;
+              if (newLives <= 0) {
+                setGameOver(true);
+                return 0;
+              }
+              return newLives;
+            });
           }
-          return m + 1;
-        });
-      }, hideSpeed);
-    }, spawnSpeed);
+          // لو كان "شرير" وهرب -> مفيش حاجة تحصل (اللاعب ذكي انه مداسش)
+          
+        }, hideSpeed);
+      }, spawnSpeed);
+    };
+
+    startGameLoop();
 
     return () => {
-      clearInterval(interval);
-      if (hideTimer.current) clearTimeout(hideTimer.current);
+      if (gameIntervalRef.current) clearInterval(gameIntervalRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [score, gameOver]);
+  }, [spawnSpeed, hideSpeed, gameOver, level]); // شيلنا lives من هنا عشان ميعملش ريستارت للوب
 
-  // 👊 Hit
+  /* ================= 👊 HIT MONSTER ================= */
   const hitMonster = (index) => {
-    if (gameOver) return;
-    if (index !== activeIndex) return;
+    if (gameOver || index !== activeIndex) return;
 
-    if (hideTimer.current) clearTimeout(hideTimer.current);
-
-    setScore((s) => s + 1);
+    // أول حاجة نوقف تايمر الهروب فوراً عشان الـ lives متنقصش بالغلط
+    if (timerRef.current) clearTimeout(timerRef.current);
+    
     setActiveIndex(null);
+
+    if (isBad) {
+      // ضربت وحش شرير -> نقص حياة
+      setLives((prev) => {
+        const newLives = prev - 1;
+        if (newLives <= 0) {
+          setGameOver(true);
+          return 0;
+        }
+        return newLives;
+      });
+    } else {
+      // ضربت وحش طيب -> زود سكور
+      setScore((s) => s + 1);
+    }
   };
 
-  // 🔄 Reset
+  /* ================= 🔄 RESET ================= */
   const resetGame = () => {
     setScore(0);
-    setMisses(0);
+    setLives(3);
     setGameOver(false);
     setActiveIndex(null);
-    if (hideTimer.current) clearTimeout(hideTimer.current);
+    setIsBad(false);
+    setLevel(0);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (gameIntervalRef.current) clearInterval(gameIntervalRef.current);
   };
 
   return (
@@ -72,14 +125,17 @@ export default function WhackMonster() {
 
         {/* HUD */}
         <div className="flex gap-20 mb-6 pointer-events-none">
-          <p className="mb-4 text-xl font-bold text-pink-400">Score: {score}</p>
+          <p className="mb-4 text-xl font-bold text-pink-400">
+            Score: {score}
+          </p>
 
+          {/* القلوب بتعتمد على lives مباشرة */}
           <div className={`${gameOver ? "hidden" : "flex"} gap-1 text-red-500 text-xl`}>
             {[0, 1, 2].map((i) => (
               <span
                 key={i}
                 className={`transition-all duration-300 ${
-                  i < 3 - misses ? "opacity-100 scale-100" : "opacity-0 scale-50"
+                  i < lives ? "opacity-100 scale-100" : "opacity-0 scale-50"
                 }`}
               >
                 ❤
@@ -102,17 +158,20 @@ export default function WhackMonster() {
                     e.stopPropagation();
                     hitMonster(index);
                   }}
-                  className="w-14 h-14 bg-pink-500 rounded-full glow-enemy z-10 pointer-events-auto cursor-pointer active:scale-95 transition"
-                  style={{ touchAction: "none" }}
+                  className={"w-14 h-14 rounded-full glow-enemy z-10 pointer-events-auto cursor-pointer active:scale-95 transition"}
+                  style={{
+                    touchAction: "none",
+                    backgroundColor: isBad ? "#1e40af" : "#ec4899", // أزرق للشرير، وردي للطيب
+                  }}
                 />
               )}
             </div>
           ))}
 
-          {/* Game Over */}
+          {/* Game Over Screen */}
           {gameOver && (
-            <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center gap-6 z-50 backdrop-blur-sm pointer-events-auto">
-              <h2 className="text-3xl font-bold text-red-500">GAME OVER</h2>
+            <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center gap-6 z-50 backdrop-blur-sm pointer-events-auto rounded-3xl">
+              <h2 className="text-3xl font-bold text-red-500 animate-bounce">GAME OVER!</h2>
               <p className="text-2xl">Score: {score}</p>
 
               <button

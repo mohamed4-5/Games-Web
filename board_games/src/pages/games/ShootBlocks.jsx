@@ -250,7 +250,7 @@ export default function ShootBlocks() {
 
           {gameOver && (
             <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center gap-6 z-50 backdrop-blur-sm pointer-events-auto">
-              <h2 className="text-3xl font-bold text-red-500">GAME OVER</h2>
+              <h2 className="text-3xl font-bold text-red-500 animate-bounce">GAME OVER!</h2>
               <p className="text-2xl">Score: {score}</p>
 
               <button
