@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PageWrapper from "../../PageWrapper";
+import Robot from "../Robot";
 
 export default function Shooter() {
   const PLAYER_X = 260;
@@ -17,6 +18,7 @@ export default function Shooter() {
 
   const [canShoot, setCanShoot] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [gameStatus, setGameStatus] = useState("playing");
 
   /* ================= 🔫 SHOOT ================= */
   const shoot = () => {
@@ -161,6 +163,7 @@ export default function Shooter() {
         setLives((l) => {
           if (l - 1 <= 0) {
             setIsGameOver(true);
+            setGameStatus("lose");
             return 0;
           }
           return l - 1;
@@ -191,10 +194,12 @@ export default function Shooter() {
     setSpawnRate(1500);
     setLevel(0);
     setIsGameOver(false);
+    setGameStatus("playing");
   };
 
   return (
         <PageWrapper>
+          <Robot mode={"game"} gameStatus={gameStatus} />
       {/* ⚙ Padding سفلي للشاشات الصغيرة لتجنب إخفاء الأزرار */}
       <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex flex-col items-center justify-center relative overflow-hidden pb-40 sm:pb-0"> 
         

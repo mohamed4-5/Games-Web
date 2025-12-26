@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PageWrapper from "../../PageWrapper";
+import Robot from "../Robot";
 
 const BOARD_HEIGHT = 600;
 const MAX_SPEED = 10; // أقصى سرعة ممكنة
@@ -10,6 +11,7 @@ export default function PianoTiles() {
   const [speed, setSpeed] = useState(6);
   const [spawnRate, setSpawnRate] = useState(900);
   const [gameOver, setGameOver] = useState(false);
+  const [gameStatus, setGameStatus] = useState("playing");
 
   /* ================= ⬇ تحريك الطوب ================= */
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function PianoTiles() {
     tiles.forEach((t) => {
       if (t.y > BOARD_HEIGHT - 50) {
         setGameOver(true);
+        setGameStatus("lose");
       }
     });
   }, [tiles]);
@@ -88,6 +91,7 @@ export default function PianoTiles() {
       if (columnTiles.length === 0) {
         // لو داس كيبورد ومفيش طوبة في العمود ده يخسر
         setGameOver(true);
+        setGameStatus("lose");
         return prev;
       }
       
@@ -119,10 +123,12 @@ export default function PianoTiles() {
     setSpeed(6); // القيمة الابتدائية عند الريستارت
     setSpawnRate(900);
     setGameOver(false);
+    setGameStatus("playing");
   };
 
   return (
     <PageWrapper>
+      <Robot mode={"game"} gameStatus={gameStatus} />
       <div className="min-h-screen w-full bg-[#0f172a] flex flex-col items-center justify-center relative touch-none select-none overflow-hidden">
 
          {/* Title */}

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import PageWrapper from "../PageWrapper";
+import Robot from "./Robot";
 
 export default function Landing() {
         const navigate = useNavigate();
@@ -9,7 +10,8 @@ export default function Landing() {
     <div className="min-h-screen flex flex-col items-center justify-center 
                     bg-gradient-to-br from-[#0A0F1F] via-[#132A4C] to-[#1D4B73]
                     text-white">
-    
+
+    <Robot mode="landing"/>
     <h1 className="text-7xl font-extrabold bg-clip-text text-transparent fcai-moving-bg"
     style={{backgroundImage: "url('/src/assets/logo.jpg')"}}>
         FCAI

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import PageWrapper from "../../PageWrapper";
+import Robot from "../Robot";
 
 const BOARD_HEIGHT = 500;
 const PLAYER_WIDTH = 50;
@@ -21,6 +22,7 @@ export default function DodgeMonsters() {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [boardWidth, setBoardWidth] = useState(340);
+  const [gameStatus, setGameStatus] = useState("playing");
 
   // مراجع للقيم المتغيرة (بدون State عشان السرعة)
   const gameState = useRef({
@@ -136,6 +138,7 @@ export default function DodgeMonsters() {
 
         if (hit) {
           setGameOver(true);
+          setGameStatus("lose");
           return false;
         }
 
@@ -167,10 +170,12 @@ export default function DodgeMonsters() {
     if (monstersContainerRef.current) monstersContainerRef.current.innerHTML = "";
     setScore(0);
     setGameOver(false);
+    setGameStatus("playing");
   };
 
   return (
     <PageWrapper>
+      <Robot mode={"game"} gameStatus={gameStatus} />
       <div className="min-h-screen bg-[#0f172a] flex flex-col items-center text-white touch-none select-none pt-10">
         <h1 className="text-4xl font-black mb-2 bg-gradient-to-r from-blue-400 to-pink-500 bg-clip-text text-transparent">
           Dodge

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import PageWrapper from "../../PageWrapper";
+import Robot from "../Robot";
 
 export default function WhackMonster() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -8,6 +9,7 @@ export default function WhackMonster() {
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
   const [level, setLevel] = useState(0);
+  const [gameStatus, setGameStatus] = useState("playing");
 
   // بنستخدم Refs عشان نضمن ان التايمر واللعبة يقروا القيم الصح دايماً
   const timerRef = useRef(null);
@@ -58,6 +60,7 @@ export default function WhackMonster() {
               const newLives = prevLives - 1;
               if (newLives <= 0) {
                 setGameOver(true);
+                setGameStatus("lose");
                 return 0;
               }
               return newLives;
@@ -92,6 +95,7 @@ export default function WhackMonster() {
         const newLives = prev - 1;
         if (newLives <= 0) {
           setGameOver(true);
+          setGameStatus("lose");
           return 0;
         }
         return newLives;
@@ -110,12 +114,14 @@ export default function WhackMonster() {
     setActiveIndex(null);
     setIsBad(false);
     setLevel(0);
+    setGameStatus("playing");
     if (timerRef.current) clearTimeout(timerRef.current);
     if (gameIntervalRef.current) clearInterval(gameIntervalRef.current);
   };
 
   return (
     <PageWrapper>
+      <Robot mode={"game"} gameStatus={gameStatus} />
       <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex flex-col items-center pt-16 text-white select-none touch-none">
 
         {/* Title */}

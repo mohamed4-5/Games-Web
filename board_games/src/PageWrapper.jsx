@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Robot from "./pages/Robot";
 
 export default function PageWrapper({ children }){
     return(

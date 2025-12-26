@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import PageWrapper from "../../PageWrapper";
+import Robot from "../Robot";
 
 const BOARD_HEIGHT = 500;
 const PLAYER_WIDTH = 50;
@@ -19,6 +20,7 @@ export default function ShootBlocks() {
   const boardRef = useRef(null);
   const animationRef = useRef(null);
   const shootRef = useRef(null);
+  const [gameStatus, setGameStatus] = useState("playing");
   
   const playerXRef = useRef(125); 
 
@@ -169,6 +171,7 @@ export default function ShootBlocks() {
           const newY = enemy.y + ENEMY_SPEED;
           if (newY + ENEMY_SIZE > BOARD_HEIGHT - PLAYER_HEIGHT) {
             setGameOver(true);
+            setGameStatus("lose");
           } else {
             newEnemies.push({ ...enemy, y: newY });
           }
@@ -192,6 +195,7 @@ export default function ShootBlocks() {
     setScore(0);
     setGameOver(false);
     setPlayerX(125);
+    setGameStatus("playing");
     playerXRef.current = 125;
     moveControl.current = null;
     keysPressed.current = { left: false, right: false }; // Reset keys
@@ -199,6 +203,7 @@ export default function ShootBlocks() {
 
   return (
     <PageWrapper>
+      <Robot mode="game" gameStatus={gameStatus}/>
       <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex flex-col items-center pt-6 text-white pb-24">
         <h1 className="text-4xl font-black mb-2 bg-gradient-to-r from-blue-400 to-pink-500 bg-clip-text text-transparent">
           Shoot
