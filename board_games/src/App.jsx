@@ -9,6 +9,7 @@ import Piano from "./pages/games/Piano";
 import WhackMonster from "./pages/games/WhackMonster";
 import DodgeMonsters from "./pages/games/DodgeMonster";
 import ShootBlocks from "./pages/games/AliensShooter";
+import Jumper from "./pages/games/Jumper";
 
 export default function App() {
   const location = useLocation();
@@ -24,6 +25,7 @@ export default function App() {
       <Route path="whack monster" element={<WhackMonster/>}/>
       <Route path="dodge monster" element={<DodgeMonsters/>}/>
       <Route path="aliens shooter" element={<ShootBlocks/>}/>
+      <Route path="the jumper" element={<Jumper/>}/>
     </Routes>
   </AnimatePresence>
 

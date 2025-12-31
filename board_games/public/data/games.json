@@ -40,5 +40,11 @@
     "name": "Aliens Shooter",
     "image": "../games/aliensshooter.jpg",
     "description": "Who said that aliens are not exist! launch through endless waves of fiery Aliens"
+  },
+  {
+    "id": 8,
+    "name": "The Jumper",
+    "image": "../games/jumper.jpg",
+    "description": "Defy gravity and soar toward infinity! Jump across platforms in the most thrilling journey to the sky."
   }
 ]
